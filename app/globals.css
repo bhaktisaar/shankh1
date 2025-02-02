@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes highfive {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-highfive {
+  animation: highfive 0.5s ease-in-out;
+}
+
+.highfive-emoji {
+  display: inline-block;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease-in-out;
+}
+
+.animate-highfive .highfive-emoji {
+  filter: grayscale(0%);
+}
+
