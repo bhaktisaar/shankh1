@@ -30,7 +30,7 @@ export default function Page() {
           console.error("Failed to fetch songs");
         }
       } catch (error) {
-        console.error("Error fetching songs:", error);
+        console.error("Error fetching song:", error);
       }
     };
 
