@@ -1,9 +1,9 @@
 "use client"; // Ensure this is a Client Component
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation"; // Import from next/navigation
+import { useState, useEffect, Suspense } from "react";
 import Player from "@/components/player";
 import Home from "@/components/home";
+import SearchParamsClient from "@/components/SearchParamsClient"; // Import new component
 
 interface Song {
   id: number;
@@ -17,10 +17,6 @@ export default function Page() {
   const [songs, setSongs] = useState<Song[]>([]); // Store songs from API
   const [currentSongId, setCurrentSongId] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  // Use `useSearchParams` instead of `useRouter`
-  const searchParams = useSearchParams();
-  const songId = searchParams.get("songId");
 
   // Fetch songs data from the API when the component mounts
   useEffect(() => {
@@ -40,15 +36,6 @@ export default function Page() {
 
     fetchSongs();
   }, []);
-
-  // Set the current song based on the songId from the query string
-  useEffect(() => {
-    if (songId) {
-      const id = parseInt(songId);
-      setCurrentSongId(id);
-      setIsPlaying(true);
-    }
-  }, [songId]);
 
   // Find the current song based on the currentSongId
   const currentSong = songs.find((song) => song.id === currentSongId) || null;
@@ -81,7 +68,13 @@ export default function Page() {
   };
 
   return (
-    <>
+    <Suspense>
+      {/* Separate Client Component for search params */}
+      <SearchParamsClient
+        setCurrentSongId={setCurrentSongId}
+        setIsPlaying={setIsPlaying}
+      />
+
       <div className="p-4 sm:p-6 md:p-8 pb-24">
         <Home
           songs={songs}
@@ -99,6 +92,6 @@ export default function Page() {
           onNext={handleNext}
         />
       </div>
-    </>
+    </Suspense>
   );
 }
