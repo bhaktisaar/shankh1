@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Play, Pause, Share2 } from "lucide-react";
 
 interface Song {
-  id: number;
+  id: string; // Ensure ID is a string
   title: string;
   artist: string;
   coverUrl: string;
@@ -24,18 +24,19 @@ export default function SongCard({
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
   };
-  const generateShareableUrl = () => {
-    // Generate the URL to share with song id as a query parameter
-    const url = `/?songId=${song.id}`;
 
-    // Use window.location.origin to get the base URL (e.g., http://localhost:3000)
+  const generateShareableUrl = () => {
+    // Ensure ID is stored as a string
+    const url = `/?songId=${String(song.id)}`;
+
+    // Full URL including the base URL (localhost or production domain)
     const fullUrl = window.location.origin + url;
 
-    // Copy the URL to the clipboard for easy sharing
+    // Copy the URL to clipboard
     navigator.clipboard
       .writeText(fullUrl)
       .then(() => {
-        alert("Share URL copied to clipboard!");
+        shareOnWhatsApp();
       })
       .catch((err) => {
         console.error("Failed to copy URL: ", err);
