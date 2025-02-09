@@ -1,6 +1,6 @@
 "use client"; // Ensure this is a Client Component
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Player from "@/components/player";
 import Home from "@/components/home";
 import SearchParamsClient from "@/components/SearchParamsClient"; // Import new component
@@ -39,7 +39,7 @@ export default function Page() {
   const currentSong = songs.find((song) => song.id === currentSongId) || null;
 
   return (
-    <>
+    <Suspense>
       <SearchParamsClient
         setCurrentSongId={setCurrentSongId}
         setIsPlaying={setIsPlaying}
@@ -84,6 +84,6 @@ export default function Page() {
           />
         </div>
       )}
-    </>
+    </Suspense>
   );
 }

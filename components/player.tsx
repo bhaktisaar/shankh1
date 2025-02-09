@@ -1,4 +1,4 @@
-"use client"; // Ensure this is a Client Component
+"use client";
 
 import { useRef, useEffect, useState } from "react";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
@@ -30,31 +30,30 @@ export default function Player({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isUserInteracted, setIsUserInteracted] = useState(false);
 
-  // Combined effect: when currentSong, isPlaying, or isUserInteracted changes.
+  // Combined effect: reloads and attempts auto-play when currentSong, isPlaying, or isUserInteracted changes.
   useEffect(() => {
     if (audioRef.current && currentSong) {
-      // Reload audio when the song changes.
-      audioRef.current.load();
+      audioRef.current.load(); // Reload the audio source
 
-      // Define a function to try to play audio.
+      // Function to try playing the audio.
       const tryPlay = async () => {
         try {
-          // Option 1: Simply try to play (if user has interacted)
           await audioRef.current!.play();
         } catch (err) {
           console.warn("Auto-play blocked:", err);
         }
       };
 
-      // Option 2 (Workaround): If no user interaction has occurred, try to mute temporarily.
       if (isPlaying) {
         if (!isUserInteracted) {
-          // Temporarily mute to force auto-play
+          // Workaround: temporarily mute to force auto-play
           audioRef.current.muted = true;
           tryPlay().then(() => {
-            // After a short delay, unmute.
+            // Unmute after a short delay so audio can be heard
             setTimeout(() => {
-              audioRef.current && (audioRef.current.muted = false);
+              if (audioRef.current) {
+                audioRef.current.muted = false;
+              }
             }, 1000);
           });
         } else {
@@ -66,16 +65,41 @@ export default function Player({
     }
   }, [currentSong, isPlaying, isUserInteracted]);
 
-  // Capture user interaction via the play button.
+  // Additional effect to update play/pause state
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current
+          .play()
+          .catch((err) => console.warn("Play failed:", err));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
+  // Handle a user gesture by updating the state and triggering play/pause.
   const handleUserInteraction = () => {
     setIsUserInteracted(true);
     onPlayPause();
   };
 
+  const playAudio = () => {
+    setIsUserInteracted(true);
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current
+          .play()
+          .catch((err) => console.warn("Play failed:", err));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  };
   if (!currentSong) return null;
 
   return (
-    <div className="bg-zinc-800 p-4 flex items-center justify-between shadow-lg">
+    <div className=" bg-zinc-800 p-4 flex items-center justify-between shadow-lg">
       <div className="flex items-center space-x-4 flex-1 min-w-0">
         <div className="relative w-12 h-12 flex-shrink-0">
           <Image
@@ -109,7 +133,7 @@ export default function Player({
           <SkipForward size={24} />
         </button>
       </div>
-      {/* The audio element is hidden */}
+      {/* Hidden audio element */}
       <audio
         ref={audioRef}
         src={currentSong.audioUrl}
@@ -117,6 +141,19 @@ export default function Player({
         playsInline
         autoPlay
       />
+
+      {/* Overlay prompting for user interaction if not yet interacted */}
+      {!isUserInteracted && isPlaying && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-10">
+          <p className="text-white mb-4">Tap to enable audio playback</p>
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded"
+            onClick={playAudio}
+          >
+            Play Audio
+          </button>
+        </div>
+      )}
     </div>
   );
 }
