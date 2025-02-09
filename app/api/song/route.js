@@ -23,7 +23,6 @@ export async function GET() {
   } catch (error) {
     // Log the error to the console for debugging
     console.error("Error fetching song:", error);
-
     // Return a 500 response in case of an error
     return new Response("Error fetching song", { status: 500 });
   }

@@ -1,20 +1,25 @@
-import SongCard from "./song-card"
+import SongCard from "./song-card";
 
 interface Song {
-  id: number
-  title: string
-  artist: string
-  coverUrl: string
+  id: string;
+  title: string;
+  artist: string;
+  coverUrl: string;
 }
 
 interface HomeProps {
-  songs: Song[]
-  currentSongId: number | null
-  isPlaying: boolean
-  onPlayPause: (songId: number) => void
+  songs: Song[];
+  currentSongId: string | null;
+  isPlaying: boolean;
+  onPlayPause: (songId: string) => void;
 }
 
-export default function Home({ songs, currentSongId, isPlaying, onPlayPause }: HomeProps) {
+export default function Home({
+  songs,
+  currentSongId,
+  isPlaying,
+  onPlayPause,
+}: HomeProps) {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Your Music</h2>
@@ -29,6 +34,5 @@ export default function Home({ songs, currentSongId, isPlaying, onPlayPause }: H
         ))}
       </div>
     </div>
-  )
+  );
 }
-

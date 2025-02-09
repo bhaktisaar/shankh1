@@ -1,9 +1,11 @@
+"use client"; // Ensure this is a Client Component
+
 import { useRef, useEffect, useState } from "react";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import Image from "next/image";
 
 interface Song {
-  id: number;
+  id: string;
   title: string;
   artist: string;
   coverUrl: string;
@@ -26,25 +28,49 @@ export default function Player({
   onNext,
 }: PlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isUserInteracted, setIsUserInteracted] = useState(false);
 
+  // Combined effect: when currentSong, isPlaying, or isUserInteracted changes.
   useEffect(() => {
-    if (audioRef.current) {
+    if (audioRef.current && currentSong) {
+      // Reload audio when the song changes.
+      audioRef.current.load();
+
+      // Define a function to try to play audio.
+      const tryPlay = async () => {
+        try {
+          // Option 1: Simply try to play (if user has interacted)
+          await audioRef.current!.play();
+        } catch (err) {
+          console.warn("Auto-play blocked:", err);
+        }
+      };
+
+      // Option 2 (Workaround): If no user interaction has occurred, try to mute temporarily.
       if (isPlaying) {
-        audioRef.current.play();
+        if (!isUserInteracted) {
+          // Temporarily mute to force auto-play
+          audioRef.current.muted = true;
+          tryPlay().then(() => {
+            // After a short delay, unmute.
+            setTimeout(() => {
+              audioRef.current && (audioRef.current.muted = false);
+            }, 1000);
+          });
+        } else {
+          tryPlay();
+        }
       } else {
         audioRef.current.pause();
       }
     }
-  }, [isPlaying, currentSong]); // Ensure it updates when changing songs
+  }, [currentSong, isPlaying, isUserInteracted]);
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.load(); // Reload audio when the song changes
-      if (isPlaying) {
-        audioRef.current.play();
-      }
-    }
-  }, [currentSong]);
+  // Capture user interaction via the play button.
+  const handleUserInteraction = () => {
+    setIsUserInteracted(true);
+    onPlayPause();
+  };
 
   if (!currentSong) return null;
 
@@ -75,7 +101,7 @@ export default function Player({
         </button>
         <button
           className="bg-white text-black rounded-full p-2"
-          onClick={onPlayPause}
+          onClick={handleUserInteraction}
         >
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
         </button>
@@ -83,7 +109,14 @@ export default function Player({
           <SkipForward size={24} />
         </button>
       </div>
-      <audio ref={audioRef} src={currentSong.audioUrl} className="hidden" />
+      {/* The audio element is hidden */}
+      <audio
+        ref={audioRef}
+        src={currentSong.audioUrl}
+        className="hidden"
+        playsInline
+        autoPlay
+      />
     </div>
   );
 }
