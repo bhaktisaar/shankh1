@@ -10,13 +10,15 @@ interface Song {
 
 interface SongCardProps {
   song: Song;
-  isPlaying: boolean;
+  isPlaying: boolean; // Indicates if this song is playing
+  isCurrent: boolean; // Indicates if this is the current selected song
   onPlayPause: () => void;
 }
 
 export default function SongCard({
   song,
   isPlaying,
+  isCurrent,
   onPlayPause,
 }: SongCardProps) {
   const shareOnWhatsApp = () => {
@@ -28,10 +30,8 @@ export default function SongCard({
   const generateShareableUrl = () => {
     // Ensure ID is stored as a string
     const url = `/?songId=${String(song.id)}`;
-
     // Full URL including the base URL (localhost or production domain)
     const fullUrl = window.location.origin + url;
-
     // Copy the URL to clipboard
     navigator.clipboard
       .writeText(fullUrl)
@@ -45,7 +45,11 @@ export default function SongCard({
   };
 
   return (
-    <div className="bg-zinc-800 rounded-lg overflow-hidden relative group">
+    <div
+      className={`bg-zinc-800 rounded-lg overflow-hidden relative group ${
+        isCurrent ? "border-4 border-blue-500" : ""
+      }`}
+    >
       <div className="relative aspect-square">
         <Image
           src={song.coverUrl || "/placeholder.svg"}
@@ -60,7 +64,11 @@ export default function SongCard({
               <Pause className="text-white" size={48} />
             ) : (
               <Play
-                className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className={`text-white transition-opacity duration-300 ${
+                  isCurrent
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100"
+                }`}
                 size={48}
               />
             )}

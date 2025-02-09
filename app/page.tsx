@@ -1,12 +1,12 @@
-"use client"; // Ensure this is a Client Component
+"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import Player from "@/components/player";
 import Home from "@/components/home";
-import SearchParamsClient from "@/components/SearchParamsClient"; // Import new component
+import SearchParamsClient from "@/components/SearchParamsClient";
 
 interface Song {
-  id: string; // Ensure ID is a string (not number)
+  id: string;
   title: string;
   artist: string;
   coverUrl: string;
@@ -21,7 +21,7 @@ export default function Page() {
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await fetch("/api/AllSongs"); // The API we created
+        const response = await fetch("/api/AllSongs");
         if (response.ok) {
           const data = await response.json();
           setSongs(data);
@@ -39,7 +39,7 @@ export default function Page() {
   const currentSong = songs.find((song) => song.id === currentSongId) || null;
 
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <SearchParamsClient
         setCurrentSongId={setCurrentSongId}
         setIsPlaying={setIsPlaying}
@@ -52,8 +52,14 @@ export default function Page() {
           currentSongId={currentSongId}
           isPlaying={isPlaying}
           onPlayPause={(songId) => {
-            setCurrentSongId(songId);
-            setIsPlaying(true);
+            // If the same song is clicked, toggle play/pause.
+            // If a new song is clicked, select it and default to paused.
+            if (songId === currentSongId) {
+              setIsPlaying((prev) => !prev);
+            } else {
+              setCurrentSongId(songId);
+              setIsPlaying(false);
+            }
           }}
         />
       </div>
@@ -63,7 +69,7 @@ export default function Page() {
           <Player
             currentSong={currentSong}
             isPlaying={isPlaying}
-            onPlayPause={() => setIsPlaying(!isPlaying)}
+            onPlayPause={() => setIsPlaying((prev) => !prev)}
             onPrevious={() => {
               const currentIndex = songs.findIndex(
                 (song) => song.id === currentSongId
@@ -71,7 +77,7 @@ export default function Page() {
               const previousIndex =
                 (currentIndex - 1 + songs.length) % songs.length;
               setCurrentSongId(songs[previousIndex].id);
-              setIsPlaying(true);
+              setIsPlaying(false); // default to paused when changing song
             }}
             onNext={() => {
               const currentIndex = songs.findIndex(
@@ -79,7 +85,7 @@ export default function Page() {
               );
               const nextIndex = (currentIndex + 1) % songs.length;
               setCurrentSongId(songs[nextIndex].id);
-              setIsPlaying(true);
+              setIsPlaying(false); // default to paused when changing song
             }}
           />
         </div>

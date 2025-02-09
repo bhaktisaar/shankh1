@@ -29,6 +29,7 @@ export default function Home({
             key={song.id}
             song={song}
             isPlaying={song.id === currentSongId && isPlaying}
+            isCurrent={song.id === currentSongId}
             onPlayPause={() => onPlayPause(song.id)}
           />
         ))}

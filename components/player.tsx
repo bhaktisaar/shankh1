@@ -30,12 +30,11 @@ export default function Player({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isUserInteracted, setIsUserInteracted] = useState(false);
 
-  // Combined effect: reloads and attempts auto-play when currentSong, isPlaying, or isUserInteracted changes.
+  // Combined effect: reloads the audio and tries to play when currentSong, isPlaying, or isUserInteracted changes.
   useEffect(() => {
     if (audioRef.current && currentSong) {
       audioRef.current.load(); // Reload the audio source
 
-      // Function to try playing the audio.
       const tryPlay = async () => {
         try {
           await audioRef.current!.play();
@@ -46,10 +45,9 @@ export default function Player({
 
       if (isPlaying) {
         if (!isUserInteracted) {
-          // Workaround: temporarily mute to force auto-play
+          // Workaround: temporarily mute to force auto-play (if needed)
           audioRef.current.muted = true;
           tryPlay().then(() => {
-            // Unmute after a short delay so audio can be heard
             setTimeout(() => {
               if (audioRef.current) {
                 audioRef.current.muted = false;
@@ -78,33 +76,27 @@ export default function Player({
     }
   }, [isPlaying]);
 
-  // Handle a user gesture by updating the state and triggering play/pause.
+  // When the user interacts, mark it and call parent's onPlayPause.
   const handleUserInteraction = () => {
     setIsUserInteracted(true);
     onPlayPause();
   };
 
+  // A simple function to handle clicking on the overlay
   const playAudio = () => {
     setIsUserInteracted(true);
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current
-          .play()
-          .catch((err) => console.warn("Play failed:", err));
-      } else {
-        audioRef.current.pause();
-      }
-    }
+    onPlayPause();
   };
+
   if (!currentSong) return null;
 
   return (
-    <div className=" bg-zinc-800 p-4 flex items-center justify-between shadow-lg">
+    <div className="relative bg-zinc-800 p-4 flex items-center justify-between shadow-lg">
       <div className="flex items-center space-x-4 flex-1 min-w-0">
         <div className="relative w-12 h-12 flex-shrink-0">
           <Image
             src={currentSong.coverUrl || "/placeholder.svg"}
-            alt="Album cover"
+            alt={currentSong.title}
             layout="fill"
             objectFit="cover"
             className="rounded"
@@ -127,6 +119,7 @@ export default function Player({
           className="bg-white text-black rounded-full p-2"
           onClick={handleUserInteraction}
         >
+          {/* Show Pause only if isPlaying and user has interacted; otherwise show Play */}
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
         </button>
         <button className="text-gray-400 hover:text-white" onClick={onNext}>
@@ -141,9 +134,8 @@ export default function Player({
         playsInline
         autoPlay
       />
-
-      {/* Overlay prompting for user interaction if not yet interacted */}
-      {!isUserInteracted && isPlaying && (
+      {/* Overlay prompting for user interaction if not yet interacted and isPlaying is true */}
+      {!isUserInteracted && !isPlaying && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-10">
           <p className="text-white mb-4">Tap to enable audio playback</p>
           <button
