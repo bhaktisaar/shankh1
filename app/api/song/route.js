@@ -6,7 +6,7 @@ export async function GET() {
     const db = await connectToDatabase();
 
     // Fetch all songs from the 'songs' collection
-    const songs = await db.collection("songs").find().toArray(); // Ensure 'songs' is the correct collection name
+    const songs = await db.collection("songs").find().toArray();
 
     // Check if no songs are found
     if (songs.length === 0) {
@@ -16,14 +16,15 @@ export async function GET() {
     // Select a random song from the fetched songs
     const randomSong = songs[Math.floor(Math.random() * songs.length)];
 
-    // Return the random song as a JSON response
+    // Return the random song as a JSON response with no caching.
     return new Response(JSON.stringify(randomSong), {
       status: 200,
+      headers: {
+        "Cache-Control": "no-store",
+      },
     });
   } catch (error) {
-    // Log the error to the console for debugging
     console.error("Error fetching song:", error);
-    // Return a 500 response in case of an error
     return new Response("Error fetching song", { status: 500 });
   }
 }

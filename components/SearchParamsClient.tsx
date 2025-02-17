@@ -24,7 +24,6 @@ export default function SearchParamsClient({
 
       if (foundSong) {
         setCurrentSongId(songId);
-        setIsPlaying(true);
       }
     }
   }, [songId, songs, setCurrentSongId, setIsPlaying]);
