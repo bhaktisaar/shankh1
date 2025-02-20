@@ -16,7 +16,9 @@ interface PlayerProps {
   currentSong: Song | null;
   isPlaying: boolean;
   hasUserInteracted: boolean;
+  selectedViaUrl: boolean;
   onPlayPause: () => void;
+  onEnablePlayback: () => void;
   onPrevious: () => void;
   onNext: () => void;
 }
@@ -25,13 +27,15 @@ export default function Player({
   currentSong,
   isPlaying,
   hasUserInteracted,
+  selectedViaUrl,
   onPlayPause,
+  onEnablePlayback,
   onPrevious,
   onNext,
 }: PlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Load new audio when the current song changes.
+  // Load new audio when currentSong changes.
   useEffect(() => {
     if (audioRef.current && currentSong) {
       audioRef.current.load();
@@ -101,9 +105,8 @@ export default function Player({
           <SkipForward size={24} />
         </button>
       </div>
-      {/* Hidden audio element */}
       <audio
-        key={currentSong.id} // Force re-creation when song changes
+        key={currentSong.id}
         ref={audioRef}
         src={currentSong.audioUrl}
         className="hidden"

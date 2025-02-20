@@ -35,7 +35,6 @@ export default function Page() {
         console.error("Error fetching song:", error);
       }
     };
-
     fetchSongs();
   }, []);
 
@@ -44,7 +43,13 @@ export default function Page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <SearchParamsClient
-        setCurrentSongId={setCurrentSongId}
+        setCurrentSongId={(id: string) => {
+          setCurrentSongId(id);
+          // When selected via URL, default to paused so the modal appears.
+          setIsPlaying(false);
+          setSelectedViaUrl(true);
+          setHasUserInteracted(false);
+        }}
         setIsPlaying={setIsPlaying}
         songs={songs}
         hasUserInteracted={hasUserInteracted}
@@ -58,13 +63,11 @@ export default function Page() {
           isPlaying={isPlaying}
           onPlayPause={(songId: string) => {
             if (songId !== currentSongId) {
-              // Manual selection: select the song and start playing immediately.
               setCurrentSongId(songId);
               setIsPlaying(true);
               setSelectedViaUrl(false);
               setHasUserInteracted(true);
             } else {
-              // Toggle play/pause.
               setIsPlaying((prev) => !prev);
             }
           }}
@@ -72,7 +75,6 @@ export default function Page() {
       </div>
 
       {selectedViaUrl && currentSong && !hasUserInteracted ? (
-        // Show the modal popup for URL-based selection.
         <SongModal
           song={currentSong}
           onStart={() => {
@@ -88,9 +90,14 @@ export default function Page() {
               currentSong={currentSong}
               isPlaying={isPlaying}
               hasUserInteracted={hasUserInteracted}
+              selectedViaUrl={selectedViaUrl}
               onPlayPause={() => {
                 setIsPlaying((prev) => !prev);
                 setHasUserInteracted(true);
+              }}
+              onEnablePlayback={() => {
+                setHasUserInteracted(true);
+                if (!isPlaying) setIsPlaying(true);
               }}
               onPrevious={() => {
                 const currentIndex = songs.findIndex(
@@ -101,7 +108,7 @@ export default function Page() {
                 setCurrentSongId(songs[previousIndex].id);
                 setIsPlaying(true);
                 setSelectedViaUrl(false);
-                setHasUserInteracted(false);
+                setHasUserInteracted(true);
               }}
               onNext={() => {
                 const currentIndex = songs.findIndex(
@@ -111,7 +118,7 @@ export default function Page() {
                 setCurrentSongId(songs[nextIndex].id);
                 setIsPlaying(true);
                 setSelectedViaUrl(false);
-                setHasUserInteracted(false);
+                setHasUserInteracted(true);
               }}
             />
           </div>

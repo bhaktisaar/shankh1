@@ -5,26 +5,26 @@ import { useEffect } from "react";
 interface SearchParamsProps {
   setCurrentSongId: (id: string) => void;
   setIsPlaying: (val: boolean) => void;
-  songs: any[];
-  hasUserInteracted: boolean;
   setSelectedViaUrl: (val: boolean) => void;
+  hasUserInteracted: boolean;
+  songs: any[];
 }
 
 export default function SearchParamsClient({
   setCurrentSongId,
   setIsPlaying,
-  songs,
-  hasUserInteracted,
   setSelectedViaUrl,
+  hasUserInteracted,
+  songs,
 }: SearchParamsProps) {
   const searchParams = useSearchParams();
   const songId = searchParams.get("songId");
 
   useEffect(() => {
-    // Only update if the user has not yet interacted and we have a songId.
+    // Only update if user hasn't interacted and we have a songId and songs are loaded.
     if (!hasUserInteracted && songId && songs.length > 0) {
       setCurrentSongId(songId);
-      // Default to paused so that modal shows.
+      // For URL-based selection, default to paused so that modal appears.
       setIsPlaying(false);
       setSelectedViaUrl(true);
     }
