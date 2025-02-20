@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Play, Pause, Share2 } from "lucide-react";
 
 interface Song {
-  id: string; // Ensure ID is a string
+  id: string;
   title: string;
   artist: string;
   coverUrl: string;
@@ -28,11 +28,8 @@ export default function SongCard({
   };
 
   const generateShareableUrl = () => {
-    // Ensure ID is stored as a string
     const url = `/?songId=${String(song.id)}`;
-    // Full URL including the base URL (localhost or production domain)
     const fullUrl = window.location.origin + url;
-    // Copy the URL to clipboard
     navigator.clipboard
       .writeText(fullUrl)
       .then(() => {

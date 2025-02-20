@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import Image from "next/image";
 
@@ -15,6 +15,7 @@ interface Song {
 interface PlayerProps {
   currentSong: Song | null;
   isPlaying: boolean;
+  hasUserInteracted: boolean;
   onPlayPause: () => void;
   onPrevious: () => void;
   onNext: () => void;
@@ -23,50 +24,24 @@ interface PlayerProps {
 export default function Player({
   currentSong,
   isPlaying,
+  hasUserInteracted,
   onPlayPause,
   onPrevious,
   onNext,
 }: PlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isUserInteracted, setIsUserInteracted] = useState(false);
 
-  // Combined effect: reloads the audio and tries to play when currentSong, isPlaying, or isUserInteracted changes.
+  // Load new audio when the current song changes.
   useEffect(() => {
     if (audioRef.current && currentSong) {
-      audioRef.current.load(); // Reload the audio source
-
-      const tryPlay = async () => {
-        try {
-          await audioRef.current!.play();
-        } catch (err) {
-          console.warn("Auto-play blocked:", err);
-        }
-      };
-
-      if (isPlaying) {
-        if (!isUserInteracted) {
-          // Workaround: temporarily mute to force auto-play (if needed)
-          audioRef.current.muted = true;
-          tryPlay().then(() => {
-            setTimeout(() => {
-              if (audioRef.current) {
-                audioRef.current.muted = false;
-              }
-            }, 1000);
-          });
-        } else {
-          tryPlay();
-        }
-      } else {
-        audioRef.current.pause();
-      }
+      audioRef.current.load();
     }
-  }, [currentSong, isPlaying, isUserInteracted]);
+  }, [currentSong]);
 
-  // Additional effect to update play/pause state
+  // Play or pause based on isPlaying and user interaction.
   useEffect(() => {
     if (audioRef.current) {
-      if (isPlaying) {
+      if (isPlaying && hasUserInteracted) {
         audioRef.current
           .play()
           .catch((err) => console.warn("Play failed:", err));
@@ -74,19 +49,7 @@ export default function Player({
         audioRef.current.pause();
       }
     }
-  }, [isPlaying]);
-
-  // When the user interacts, mark it and call parent's onPlayPause.
-  const handleUserInteraction = () => {
-    setIsUserInteracted(true);
-    onPlayPause();
-  };
-
-  // A simple function to handle clicking on the overlay
-  const playAudio = () => {
-    setIsUserInteracted(true);
-    onPlayPause();
-  };
+  }, [isPlaying, hasUserInteracted]);
 
   if (!currentSong) return null;
 
@@ -112,40 +75,40 @@ export default function Player({
         </div>
       </div>
       <div className="flex items-center justify-end space-x-4 flex-1">
-        <button className="text-gray-400 hover:text-white" onClick={onPrevious}>
+        <button
+          type="button"
+          className="text-gray-400 hover:text-white"
+          onClick={onPrevious}
+        >
           <SkipBack size={24} />
         </button>
         <button
+          type="button"
           className="bg-white text-black rounded-full p-2"
-          onClick={handleUserInteraction}
+          onClick={onPlayPause}
         >
-          {/* Show Pause only if isPlaying and user has interacted; otherwise show Play */}
-          {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+          {isPlaying && hasUserInteracted ? (
+            <Pause size={24} />
+          ) : (
+            <Play size={24} />
+          )}
         </button>
-        <button className="text-gray-400 hover:text-white" onClick={onNext}>
+        <button
+          type="button"
+          className="text-gray-400 hover:text-white"
+          onClick={onNext}
+        >
           <SkipForward size={24} />
         </button>
       </div>
       {/* Hidden audio element */}
       <audio
+        key={currentSong.id} // Force re-creation when song changes
         ref={audioRef}
         src={currentSong.audioUrl}
         className="hidden"
         playsInline
-        autoPlay
       />
-      {/* Overlay prompting for user interaction if not yet interacted and isPlaying is true */}
-      {!isUserInteracted && !isPlaying && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-10">
-          <p className="text-white mb-4">Tap to enable audio playback</p>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={playAudio}
-          >
-            Play Audio
-          </button>
-        </div>
-      )}
     </div>
   );
 }
