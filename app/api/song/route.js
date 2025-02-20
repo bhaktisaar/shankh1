@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { connectToDatabase } from "../../../lib/mongoDb";
 
 export async function GET() {
