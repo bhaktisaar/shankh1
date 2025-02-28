@@ -1,17 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import { Play, Pause, Share2 } from "lucide-react";
+import { useLanguage } from "@/components/LanguageContext";
 
 interface Song {
   id: string;
-  title: string;
+  title: string; // English title from MongoDB
+  hTitle: string; // Hindi title from MongoDB
   artist: string;
   coverUrl: string;
 }
 
 interface SongCardProps {
   song: Song;
-  isPlaying: boolean; // Indicates if this song is playing
-  isCurrent: boolean; // Indicates if this is the current selected song
+  isPlaying: boolean;
+  isCurrent: boolean;
   onPlayPause: () => void;
 }
 
@@ -21,25 +25,11 @@ export default function SongCard({
   isCurrent,
   onPlayPause,
 }: SongCardProps) {
-  const shareOnWhatsApp = () => {
-    const text = `Check out this song: ${song.title} by ${song.artist}`;
-    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank");
-  };
+  const { language } = useLanguage();
+  // Use the Hindi title if the language is set to Hindi
+  const displayTitle = language === "en" ? song.title : song.hTitle;
 
-  const generateShareableUrl = () => {
-    const url = `/?songId=${String(song.id)}`;
-    const fullUrl = window.location.origin + url;
-    navigator.clipboard
-      .writeText(fullUrl)
-      .then(() => {
-        shareOnWhatsApp();
-      })
-      .catch((err) => {
-        console.error("Failed to copy URL: ", err);
-        alert("Failed to copy the URL.");
-      });
-  };
+  // ... rest of your component remains the same
 
   return (
     <div
@@ -50,7 +40,7 @@ export default function SongCard({
       <div className="relative aspect-square">
         <Image
           src={song.coverUrl || "/placeholder.svg"}
-          alt={song.title}
+          alt={displayTitle}
           layout="fill"
           objectFit="cover"
           className={isPlaying ? "opacity-50" : ""}
@@ -73,11 +63,20 @@ export default function SongCard({
         </div>
       </div>
       <div className="p-4">
-        <h3 className="font-semibold truncate">{song.title}</h3>
+        <h3 className="font-semibold truncate">{displayTitle}</h3>
         <p className="text-sm text-gray-400 truncate">{song.artist}</p>
       </div>
       <button
-        onClick={generateShareableUrl}
+        onClick={() => {
+          const shareUrl = `${window.location.origin}/?songId=${song.id}`;
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            const text = `Check out this song!\n\nCover: ${song.coverUrl}\nTitle: ${displayTitle}\nListen here: ${shareUrl}`;
+            window.open(
+              `https://wa.me/?text=${encodeURIComponent(text)}`,
+              "_blank"
+            );
+          });
+        }}
         className="absolute bottom-2 right-2 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors duration-300"
       >
         <Share2 size={20} />
