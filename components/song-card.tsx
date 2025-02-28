@@ -9,6 +9,7 @@ interface Song {
   title: string; // English title from MongoDB
   hTitle: string; // Hindi title from MongoDB
   artist: string;
+  hArtist: string;
   coverUrl: string;
 }
 
@@ -27,7 +28,11 @@ export default function SongCard({
 }: SongCardProps) {
   const { language } = useLanguage();
   // Use the Hindi title if the language is set to Hindi
+  console.log("====================================");
+  console.log(song);
+  console.log("====================================");
   const displayTitle = language === "en" ? song.title : song.hTitle;
+  const displayArtist = language === "en" ? song.artist : song.hArtist;
 
   // ... rest of your component remains the same
 
@@ -64,7 +69,7 @@ export default function SongCard({
       </div>
       <div className="p-4">
         <h3 className="font-semibold truncate">{displayTitle}</h3>
-        <p className="text-sm text-gray-400 truncate">{song.artist}</p>
+        <p className="text-sm text-gray-400 truncate">{displayArtist}</p>
       </div>
       <button
         onClick={() => {

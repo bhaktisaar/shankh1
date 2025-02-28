@@ -7,6 +7,7 @@ interface Song {
   title: string;
   hTitle: string;
   artist: string;
+  hArtist: string;
   coverUrl: string;
 }
 

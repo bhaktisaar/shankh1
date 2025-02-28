@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider, useLanguage } from "@/components/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -72,20 +71,21 @@ function Header() {
         <Button variant="default">
           {translations[currentLanguage].getStarted}
         </Button>
-        <button
-          onClick={toggleLanguage}
-          className=" text-white px-3 py-1 rounded-md transition"
-        >
+
+        {/* Language Toggle Button */}
+        <div className="flex items-center gap-2">
+          <p className="text-white"> Eng</p>
           <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" className="sr-only peer" value="" />
-            <div
-              onClick={toggleLanguage}
-              className="group peer bg-white rounded-full duration-300 w-16 h-8 ring-2 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-6 after:w-6 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-8 peer-hover:after:scale-95"
-            ></div>
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={language === "hi"} // Sync checkbox with language state
+              onChange={toggleLanguage} // Change language on toggle
+            />
+            <div className="group peer bg-white rounded-full duration-300 w-14 h-5 ring-2 ring-slate-200 after:duration-300 after:bg-slate-200 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-3 after:w-3 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-8 peer-hover:after:scale-95"></div>
           </label>
-        </button>
-        {/* <Switch />
-        <p>{translations[currentLanguage].toggleText}</p> */}
+          <p className="text-white">हिंदी</p>
+        </div>
       </div>
     </header>
   );
