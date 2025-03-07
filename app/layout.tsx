@@ -1,11 +1,17 @@
 "use client";
 
 import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider, useLanguage } from "@/components/LanguageContext";
 import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ 
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export default function RootLayout({
   children,
@@ -16,11 +22,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <LanguageProvider>
-          <div className="flex flex-col min-h-screen bg-black text-white">
+          <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#1C1917] to-[#0C0A09] text-white">
             {/* 🔹 Sticky Header */}
             <Header />
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto">{children}</main>
+            <main className="flex-1 overflow-y-auto">
+              {children}
+            </main>
             <Footer />
           </div>
         </LanguageProvider>
@@ -37,55 +45,55 @@ const translations: Record<
   { title: string; toggleText: string; getStarted: string }
 > = {
   en: {
-    title: "Music Streaming Apps",
+    title: "Shankh",
     toggleText: "Eng",
-    getStarted: "Get Started",
+    getStarted: "About Us",
   },
   hi: {
-    title: "म्यूजिक स्ट्रीमिंग ऐप्स",
+    title: "शंख",
     toggleText: "हिंदी",
-    getStarted: "शुरू करें",
+    getStarted: "About Us",
   },
 };
 
 function Header() {
   const { language, toggleLanguage } = useLanguage();
-
-  // Ensure TypeScript recognizes `language` as a valid key
   const currentLanguage = language as Language;
 
   return (
-    <header className="sticky top-0 z-50 bg-zinc-900 p-4 flex items-center justify-between shadow-md">
-      <div className="flex items-center space-x-3">
-        <h1 className="text-2xl font-bold">
-          {translations[currentLanguage].title}
-        </h1>
-        <img
-          src="/cover.jpg"
-          width={40}
-          height={40}
-          alt="Cover"
-          className="rounded-full"
-        />
-      </div>
-      <div className="flex items-center space-x-3">
-        <Button variant="default">
-          {translations[currentLanguage].getStarted}
-        </Button>
-
-        {/* Language Toggle Button */}
-        <div className="flex items-center gap-2">
-          <p className="text-white"> Eng</p>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={language === "hi"} // Sync checkbox with language state
-              onChange={toggleLanguage} // Change language on toggle
-            />
-            <div className="group peer bg-white rounded-full duration-300 w-14 h-5 ring-2 ring-slate-200 after:duration-300 after:bg-slate-200 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-3 after:w-3 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-8 peer-hover:after:scale-95"></div>
-          </label>
-          <p className="text-white">हिंदी</p>
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-[#1C1917]/90 border-b border-amber-900/20 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <img
+            src="/conch_1.jpg"
+            width={44}
+            height={44}
+            alt="Cover"
+            className="rounded-full ring-2 ring-amber-500/30 transition-transform hover:scale-105"
+          />
+          <h1 className={`text-3xl font-bold ${montserrat.className} tracking-wide bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent`}>
+            {translations[currentLanguage].title}
+          </h1>
+        </div>
+        <div className="flex items-center space-x-6">
+          {/* Language Toggle Button */}
+          <div className="flex items-center gap-3">
+            <p className="text-sm text-amber-200/80 font-medium">Eng</p>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={language === "hi"}
+                onChange={toggleLanguage}
+              />
+              <div className="group peer h-6 w-11 rounded-full bg-stone-800 transition-all duration-300 
+                           after:content-[''] after:absolute after:top-0.5 after:left-0.5 
+                           after:bg-amber-200 after:rounded-full after:h-5 after:w-5 after:transition-all
+                           peer-checked:after:translate-x-5 peer-checked:bg-amber-700
+                           hover:bg-stone-700 peer-checked:hover:bg-amber-600"></div>
+            </label>
+            <p className="text-sm text-amber-200/80 font-medium">हिंदी</p>
+          </div>
         </div>
       </div>
     </header>
@@ -94,12 +102,12 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="bg-zinc-900 text-white py-4 text-center">
+    <footer className="bg-[#1C1917] text-amber-200/80 py-4 text-center border-t border-amber-900/20">
       <p className="text-sm">
         © 2024 Espello Technologies Private Limited. All rights reserved.
       </p>
       <p className="text-sm">
-        <strong>Shankh</strong> is a trademark and brand of Espello Technologies
+        <strong className="text-amber-400">Shankh</strong> is a trademark and brand of Espello Technologies
         Private Limited.
       </p>
     </footer>

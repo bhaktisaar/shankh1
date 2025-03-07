@@ -5,7 +5,7 @@ export default function Sidebar() {
   return (
     <div className="w-64 bg-zinc-900 p-4 flex flex-col">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">YouTube Music</h1>
+        <h1 className="text-2xl font-bold">Shankh</h1>
       </div>
       <nav>
         <ul className="space-y-4">
