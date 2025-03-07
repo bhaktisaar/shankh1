@@ -48,15 +48,15 @@ export default function SongCard({
         isCurrent ? "ring-2 ring-blue-500/50" : "hover:ring-1 hover:ring-zinc-700"
       }`}
     >
-      <div className="relative aspect-square">
+      <div className="relative aspect-square group/image">
         <Image
           src={song.coverUrl || "/placeholder.svg"}
           alt={displayTitle}
           layout="fill"
           objectFit="cover"
-          className={`transition-all duration-300 ${isPlaying ? "scale-105 brightness-50" : "group-hover:brightness-75"}`}
+          className={`transition-all duration-300 ${isPlaying ? "scale-105 brightness-50" : "group-hover/image:brightness-75"}`}
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-all duration-300">
           <button 
             onClick={onPlayPause}
             className="transform transition-all duration-300 hover:scale-110"
@@ -89,8 +89,7 @@ export default function SongCard({
           });
         }}
         className="absolute bottom-3 right-3 bg-[#25D366]/90 backdrop-blur-sm text-white p-2.5 rounded-full 
-                   opacity-0 group-hover:opacity-100 transition-all duration-300 
-                   hover:bg-[#128C7E] hover:scale-110 shadow-lg"
+                   transition-all duration-300 hover:bg-[#128C7E] hover:scale-110 shadow-lg"
       >
         <MessageCircleMore size={22} />
       </button>

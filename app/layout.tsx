@@ -102,7 +102,7 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="bg-[#1C1917] text-amber-200/80 py-4 text-center border-t border-amber-900/20">
+    <footer className="bg-[#1C1917] text-white py-4 text-center border-t border-amber-900/20">
       <p className="text-sm">
         © 2024 Espello Technologies Private Limited. All rights reserved.
       </p>
