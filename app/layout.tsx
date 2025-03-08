@@ -22,14 +22,27 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <LanguageProvider>
-          <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#1C1917] to-[#0C0A09] text-white">
+          <div className="flex flex-col min-h-screen bg-gradient-to-b from-stone-100 to-amber-50 text-stone-800">
             {/* 🔹 Sticky Header */}
             <Header />
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto pb-20">
               {children}
+              {/* Footer as part of main content */}
+              <footer className="bg-stone-100 text-stone-600 py-4 text-center border-t border-amber-200/20 shadow-inner mt-8">
+                <div className="max-w-7xl mx-auto px-4">
+                  <p className="text-sm">
+                    © 2024 Espello Technologies Private Limited. All rights reserved.
+                  </p>
+                  <p className="text-sm">
+                    <strong className="text-amber-600">Shankh</strong> is a trademark and brand of Espello Technologies
+                    Private Limited.
+                  </p>
+                </div>
+              </footer>
             </main>
-            <Footer />
+            {/* Space reserved for fixed music player */}
+            <div className="h-20" /> {/* This ensures content doesn't hide behind the player */}
           </div>
         </LanguageProvider>
       </body>
@@ -60,25 +73,33 @@ function Header() {
   const { language, toggleLanguage } = useLanguage();
   const currentLanguage = language as Language;
 
+  const handleHomeClick = () => {
+    window.location.href = '/';
+  };
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-[#1C1917]/90 border-b border-amber-900/20 transition-all duration-300">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-stone-100/80 border-b border-amber-200/20 transition-all duration-300 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <img
-            src="/conch_1.jpg"
+            src="https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/conch_1.jpg"
             width={44}
             height={44}
-            alt="Cover"
-            className="rounded-full ring-2 ring-amber-500/30 transition-transform hover:scale-105"
+            alt="Shankh Logo"
+            className="rounded-full ring-2 ring-amber-500/30 transition-transform hover:scale-105 cursor-pointer"
+            onClick={handleHomeClick}
           />
-          <h1 className={`text-3xl font-bold ${montserrat.className} tracking-wide bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent`}>
+          <h1 
+            className={`text-3xl font-bold ${montserrat.className} tracking-wide bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity`}
+            onClick={handleHomeClick}
+          >
             {translations[currentLanguage].title}
           </h1>
         </div>
         <div className="flex items-center space-x-6">
           {/* Language Toggle Button */}
           <div className="flex items-center gap-3">
-            <p className="text-sm text-amber-200/80 font-medium">Eng</p>
+            <p className="text-sm text-stone-600 font-medium">Eng</p>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -86,30 +107,16 @@ function Header() {
                 checked={language === "hi"}
                 onChange={toggleLanguage}
               />
-              <div className="group peer h-6 w-11 rounded-full bg-stone-800 transition-all duration-300 
+              <div className="group peer h-6 w-11 rounded-full bg-stone-200 transition-all duration-300 
                            after:content-[''] after:absolute after:top-0.5 after:left-0.5 
-                           after:bg-amber-200 after:rounded-full after:h-5 after:w-5 after:transition-all
-                           peer-checked:after:translate-x-5 peer-checked:bg-amber-700
-                           hover:bg-stone-700 peer-checked:hover:bg-amber-600"></div>
+                           after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all
+                           peer-checked:after:translate-x-5 peer-checked:bg-amber-500
+                           hover:bg-stone-300 peer-checked:hover:bg-amber-400"></div>
             </label>
-            <p className="text-sm text-amber-200/80 font-medium">हिंदी</p>
+            <p className="text-sm text-stone-600 font-medium">हिंदी</p>
           </div>
         </div>
       </div>
     </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-[#1C1917] text-white py-4 text-center border-t border-amber-900/20">
-      <p className="text-sm">
-        © 2024 Espello Technologies Private Limited. All rights reserved.
-      </p>
-      <p className="text-sm">
-        <strong className="text-amber-400">Shankh</strong> is a trademark and brand of Espello Technologies
-        Private Limited.
-      </p>
-    </footer>
   );
 }

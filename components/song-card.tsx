@@ -44,8 +44,8 @@ export default function SongCard({
 
   return (
     <div
-      className={`group relative bg-zinc-900/80 backdrop-blur-md rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-zinc-900/20 ${
-        isCurrent ? "ring-2 ring-blue-500/50" : "hover:ring-1 hover:ring-zinc-700"
+      className={`group relative bg-amber-900/90 backdrop-blur-md rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber-900/30 ${
+        isCurrent ? "ring-2 ring-amber-400/50" : "hover:ring-1 hover:ring-amber-500/30"
       }`}
     >
       <div className="relative aspect-square group/image">
@@ -54,26 +54,26 @@ export default function SongCard({
           alt={displayTitle}
           layout="fill"
           objectFit="cover"
-          className={`transition-all duration-300 ${isPlaying ? "scale-105 brightness-50" : "group-hover/image:brightness-75"}`}
+          className={`transition-all duration-300 ${isPlaying ? "scale-105 brightness-75" : "group-hover/image:brightness-90"}`}
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-all duration-300">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-amber-950/80 via-amber-900/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-all duration-300">
           <button 
             onClick={onPlayPause}
             className="transform transition-all duration-300 hover:scale-110"
           >
             {isPlaying ? (
-              <Pause className="text-white drop-shadow-lg" size={54} />
+              <Pause className="text-amber-100 drop-shadow-lg" size={54} />
             ) : (
-              <Play className="text-white drop-shadow-lg" size={54} />
+              <Play className="text-amber-100 drop-shadow-lg" size={54} />
             )}
           </button>
         </div>
       </div>
-      <div className="p-4 bg-gradient-to-t from-zinc-900/90 to-zinc-900/60">
-        <h3 className={`${montserrat.className} font-semibold text-lg truncate text-white/90`}>
+      <div className="p-4 bg-gradient-to-t from-amber-900/95 via-amber-800/90 to-amber-800/80">
+        <h3 className={`${montserrat.className} font-semibold text-lg truncate text-amber-100`}>
           {displayTitle}
         </h3>
-        <p className="text-sm text-zinc-400 truncate mt-1">
+        <p className="text-sm text-amber-200/80 truncate mt-1">
           {displayArtist}
         </p>
       </div>
