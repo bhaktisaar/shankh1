@@ -1,7 +1,15 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Play, Pause, SkipBack, SkipForward, Heart, Volume2, VolumeX } from "lucide-react";
+import {
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Heart,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import Image from "next/image";
 import { Montserrat } from "next/font/google";
 
@@ -64,32 +72,27 @@ export default function Player({
         audioRef.current.pause();
       }
     }
-  }, [isPlaying, hasUserInteracted]);
+  }, [currentSong, isPlaying, hasUserInteracted]);
 
   // Update time and duration
   useEffect(() => {
     if (audioRef.current) {
       const audio = audioRef.current;
-      
+
       const timeUpdate = () => setCurrentTime(audio.currentTime);
       const durationChange = () => setDuration(audio.duration);
-      
-      audio.addEventListener('timeupdate', timeUpdate);
-      audio.addEventListener('loadedmetadata', durationChange);
-      
+
+      audio.addEventListener("timeupdate", timeUpdate);
+      audio.addEventListener("loadedmetadata", durationChange);
+
       return () => {
-        audio.removeEventListener('timeupdate', timeUpdate);
-        audio.removeEventListener('loadedmetadata', durationChange);
+        audio.removeEventListener("timeupdate", timeUpdate);
+        audio.removeEventListener("loadedmetadata", durationChange);
       };
     }
   }, []);
 
   // Format time to mm:ss
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
 
   // Handle volume change
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +144,7 @@ export default function Player({
                    [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:opacity-0
                    hover:[&::-webkit-slider-thumb]:opacity-100 transition-all"
         />
-        <div 
+        <div
           className="h-full bg-white/70 hover:bg-white transition-colors"
           style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
         />
@@ -162,16 +165,18 @@ export default function Player({
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h3 className={`font-semibold truncate text-sm text-white/90 ${montserrat.className}`}>
+                <h3
+                  className={`font-semibold truncate text-sm text-white/90 ${montserrat.className}`}
+                >
                   {currentSong.title}
                 </h3>
                 <button
                   onClick={() => setIsLiked(!isLiked)}
                   className={`flex-shrink-0 transition-colors ${
-                    isLiked ? 'text-white' : 'text-white/60 hover:text-white'
+                    isLiked ? "text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  <Heart className={isLiked ? 'fill-current' : ''} size={16} />
+                  <Heart className={isLiked ? "fill-current" : ""} size={16} />
                 </button>
               </div>
               <p className="text-xs text-white/60 truncate">
@@ -261,9 +266,20 @@ export default function Player({
       <audio
         key={currentSong.id}
         ref={audioRef}
+        onTimeUpdate={() => {
+          if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+          }
+        }}
+        onLoadedMetadata={() => {
+          if (audioRef.current) {
+            setDuration(audioRef.current.duration);
+          }
+        }}
         src={currentSong.audioUrl}
         className="hidden"
         playsInline
+        onEnded={onNext}
       />
     </div>
   );

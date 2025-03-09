@@ -45,7 +45,9 @@ export default function SongCard({
   return (
     <div
       className={`group relative bg-amber-900/90 backdrop-blur-md rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber-900/30 ${
-        isCurrent ? "ring-2 ring-amber-400/50" : "hover:ring-1 hover:ring-amber-500/30"
+        isCurrent
+          ? "ring-2 ring-amber-400/50"
+          : "hover:ring-1 hover:ring-amber-500/30"
       }`}
     >
       <div className="relative aspect-square group/image">
@@ -54,10 +56,14 @@ export default function SongCard({
           alt={displayTitle}
           layout="fill"
           objectFit="cover"
-          className={`transition-all duration-300 ${isPlaying ? "scale-105 brightness-75" : "group-hover/image:brightness-90"}`}
+          className={`transition-all duration-300 ${
+            isPlaying
+              ? "scale-105 brightness-75"
+              : "group-hover/image:brightness-90"
+          }`}
         />
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-amber-950/80 via-amber-900/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-all duration-300">
-          <button 
+          <button
             onClick={onPlayPause}
             className="transform transition-all duration-300 hover:scale-110"
           >
@@ -70,9 +76,12 @@ export default function SongCard({
         </div>
       </div>
       <div className="p-4 bg-gradient-to-t from-amber-900/95 via-amber-800/90 to-amber-800/80">
-        <h3 className={`${montserrat.className} font-semibold text-lg truncate text-amber-100`}>
+        <h3
+          className={`${montserrat.className} font-semibold text-lg truncate text-amber-100 w-72`}
+        >
           {displayTitle}
         </h3>
+
         <p className="text-sm text-amber-200/80 truncate mt-1">
           {displayArtist}
         </p>
@@ -81,7 +90,19 @@ export default function SongCard({
         onClick={() => {
           const shareUrl = `${window.location.origin}/?songId=${song.id}`;
           navigator.clipboard.writeText(shareUrl).then(() => {
-            const text = `Check out this song!\n\nCover: ${song.coverUrl}\nTitle: ${displayTitle}\nListen here: ${shareUrl}`;
+            // Construct your WhatsApp message
+            const text = `Jai Shree Krishna! 🙏
+      Aapke mann ki shanti aur bhakti ke liye, yeh raha aapka bhajan:
+      
+      🎶 Bhajan – ${displayTitle}
+      🔗 Sunein yahan - ${shareUrl}
+      
+      Bhagwan ki kripa aap par sada bani rahe! 🌸✨
+      Agar aur bhajan chahiye toh bas "Bhajan" likh kar bhejiye.
+      
+      Hari Om! 🚩`;
+
+            // Open WhatsApp share
             window.open(
               `https://wa.me/?text=${encodeURIComponent(text)}`,
               "_blank"
