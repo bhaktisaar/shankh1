@@ -34,6 +34,9 @@ const emojiFlower = "\uD83C\uDF38"; // 🌸
 const emojiRose = "\uD83C\uDF3A"; // 🌺
 const emojiFlag = "\uD83D\uDEA9"; // 🚩
 
+// Replace with your actual phone number (include country code)
+const phoneNumber = "YOUR_PHONE_NUMBER_HERE";
+
 export default function SongCard({
   song,
   isPlaying,
@@ -102,14 +105,20 @@ ${emojiRose} *Rozana bhakti ka anand lene ke liye, humse judein -* https://wame.
 
 ${emojiFlag} *Hari Om!* ${emojiFlag}`;
 
-          // Log the text for debugging (check the console output)
+          // Log the text for debugging
           console.log(text);
 
-          // Open WhatsApp share URL with properly encoded text
-          window.open(
-            `https://wa.me/?text=${encodeURIComponent(text)}`,
-            "_blank"
-          );
+          // Determine if the user is on mobile using the user agent
+          const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+          const encodedText = encodeURIComponent(text);
+
+          // Use WhatsApp Web for desktop and WhatsApp protocol for mobile
+          const whatsappUrl = isMobile
+            ? `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`
+            : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedText}`;
+
+          // Open the appropriate WhatsApp URL
+          window.open(whatsappUrl, "_blank");
         }}
         className="absolute bottom-3 right-3 bg-[#25D366]/90 backdrop-blur-sm text-white p-2.5 rounded-full transition-all duration-300 hover:bg-[#128C7E] hover:scale-110 shadow-lg"
       >
