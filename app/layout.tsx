@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider, useLanguage } from "@/components/LanguageContext";
-import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
 const montserrat = Montserrat({
@@ -63,7 +62,7 @@ const translations: Record<
   { title: string; toggleText: string; getStarted: string }
 > = {
   en: {
-    title: "Music App",
+    title: "Shankh",
     toggleText: "Eng",
     getStarted: "About Us",
   },
