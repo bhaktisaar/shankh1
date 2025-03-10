@@ -63,7 +63,7 @@ const translations: Record<
   { title: string; toggleText: string; getStarted: string }
 > = {
   en: {
-    title: "Shankh",
+    title: "Music App",
     toggleText: "Eng",
     getStarted: "About Us",
   },
@@ -87,7 +87,7 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <img
-            src="https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/conch_1.jpg"
+            src="https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/shankh_logo_1.jpg"
             width={44}
             height={44}
             alt="Shankh Logo"
