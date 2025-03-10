@@ -7,10 +7,10 @@ import { LanguageProvider, useLanguage } from "@/components/LanguageContext";
 import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
-const montserrat = Montserrat({ 
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  display: 'swap',
+const montserrat = Montserrat({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export default function RootLayout({
@@ -20,6 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta charSet="UTF-8" />
+      </head>
       <body className={inter.className}>
         <LanguageProvider>
           <div className="flex flex-col min-h-screen bg-gradient-to-b from-stone-100 to-amber-50 text-stone-800">
@@ -32,17 +35,19 @@ export default function RootLayout({
               <footer className="bg-stone-100 text-stone-600 py-4 text-center border-t border-amber-200/20 shadow-inner mt-8">
                 <div className="max-w-7xl mx-auto px-4">
                   <p className="text-sm">
-                    © 2024 Espello Technologies Private Limited. All rights reserved.
+                    © 2024 Espello Technologies Private Limited. All rights
+                    reserved.
                   </p>
                   <p className="text-sm">
-                    <strong className="text-amber-600">Shankh</strong> is a trademark and brand of Espello Technologies
-                    Private Limited.
+                    <strong className="text-amber-600">Shankh</strong> is a
+                    trademark and brand of Espello Technologies Private Limited.
                   </p>
                 </div>
               </footer>
             </main>
             {/* Space reserved for fixed music player */}
-            <div className="h-20" /> {/* This ensures content doesn't hide behind the player */}
+            <div className="h-20" />{" "}
+            {/* This ensures content doesn't hide behind the player */}
           </div>
         </LanguageProvider>
       </body>
@@ -74,7 +79,7 @@ function Header() {
   const currentLanguage = language as Language;
 
   const handleHomeClick = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   return (
@@ -89,7 +94,7 @@ function Header() {
             className="rounded-full ring-2 ring-amber-500/30 transition-transform hover:scale-105 cursor-pointer"
             onClick={handleHomeClick}
           />
-          <h1 
+          <h1
             className={`text-3xl font-bold ${montserrat.className} tracking-wide bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity`}
             onClick={handleHomeClick}
           >
@@ -107,11 +112,13 @@ function Header() {
                 checked={language === "hi"}
                 onChange={toggleLanguage}
               />
-              <div className="group peer h-6 w-11 rounded-full bg-stone-200 transition-all duration-300 
+              <div
+                className="group peer h-6 w-11 rounded-full bg-stone-200 transition-all duration-300 
                            after:content-[''] after:absolute after:top-0.5 after:left-0.5 
                            after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all
                            peer-checked:after:translate-x-5 peer-checked:bg-amber-500
-                           hover:bg-stone-300 peer-checked:hover:bg-amber-400"></div>
+                           hover:bg-stone-300 peer-checked:hover:bg-amber-400"
+              ></div>
             </label>
             <p className="text-sm text-stone-600 font-medium">हिंदी</p>
           </div>

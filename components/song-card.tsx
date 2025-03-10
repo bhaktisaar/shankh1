@@ -26,6 +26,14 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
+// Define emojis as variables using Unicode escapes
+const emojiSparkle = "\u2728"; // ✨
+const emojiMusic = "\uD83C\uDFB6"; // 🎶
+const emojiLink = "\uD83D\uDD17"; // 🔗
+const emojiFlower = "\uD83C\uDF38"; // 🌸
+const emojiRose = "\uD83C\uDF3A"; // 🌺
+const emojiFlag = "\uD83D\uDEA9"; // 🚩
+
 export default function SongCard({
   song,
   isPlaying,
@@ -33,14 +41,9 @@ export default function SongCard({
   onPlayPause,
 }: SongCardProps) {
   const { language } = useLanguage();
-  // Use the Hindi title if the language is set to Hindi
-  console.log("====================================");
-  console.log(song);
-  console.log("====================================");
   const displayTitle = language === "en" ? song.title : song.hTitle;
   const displayArtist = language === "en" ? song.artist : song.hArtist;
-
-  // ... rest of your component remains the same
+  const songUrl = `https://shankh.app/?songId=${song.id}`;
 
   return (
     <div
@@ -81,36 +84,34 @@ export default function SongCard({
         >
           {displayTitle}
         </h3>
-
         <p className="text-sm text-amber-200/80 truncate mt-1">
           {displayArtist}
         </p>
       </div>
       <button
         onClick={() => {
-          const shareUrl = `${window.location.origin}/?songId=${song.id}`;
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            // Construct your WhatsApp message
-            const text = `Jai Shree Krishna! 🙏
-      Aapke mann ki shanti aur bhakti ke liye, yeh raha aapka bhajan:
-      
-      🎶 Bhajan – ${displayTitle}
-      🔗 Sunein yahan - ${shareUrl}
-      
-      Bhagwan ki kripa aap par sada bani rahe! 🌸✨
-      Agar aur bhajan chahiye toh bas "Bhajan" likh kar bhejiye.
-      
-      Hari Om! 🚩`;
+          // Construct share text using emoji variables and dynamic song data
+          const text = `${emojiSparkle} *Maine 'Shankh' par ek sunder bhajan suna, aap bhi suniye!* ${emojiSparkle}
 
-            // Open WhatsApp share
-            window.open(
-              `https://wa.me/?text=${encodeURIComponent(text)}`,
-              "_blank"
-            );
-          });
+${emojiMusic} *Bhajan:* ${displayTitle} - ${displayArtist}
+${emojiLink} *Sunein yahan:* ${songUrl}
+
+${emojiFlower} *Bhagwan ki kripa aap par sada bani rahe!* ${emojiSparkle}
+
+${emojiRose} *Rozana bhakti ka anand lene ke liye, humse judein -* https://wame.pro/shankh
+
+${emojiFlag} *Hari Om!* ${emojiFlag}`;
+
+          // Log the text for debugging (check the console output)
+          console.log(text);
+
+          // Open WhatsApp share URL with properly encoded text
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(text)}`,
+            "_blank"
+          );
         }}
-        className="absolute bottom-3 right-3 bg-[#25D366]/90 backdrop-blur-sm text-white p-2.5 rounded-full 
-                   transition-all duration-300 hover:bg-[#128C7E] hover:scale-110 shadow-lg"
+        className="absolute bottom-3 right-3 bg-[#25D366]/90 backdrop-blur-sm text-white p-2.5 rounded-full transition-all duration-300 hover:bg-[#128C7E] hover:scale-110 shadow-lg"
       >
         <MessageCircleMore size={22} />
       </button>
