@@ -34,7 +34,7 @@ export async function generateMetadata({
       url: "https://shankh.app/",
       images: [
         {
-          url: "https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/Screenshot%202025-02-23%20at%204.31.18%E2%80%AFPM.png",
+          url: "https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/Hey%20Ram%20Hey%20Ram.jpg",
           width: 800,
           height: 800,
           alt: "Music App Cover",
@@ -47,7 +47,7 @@ export async function generateMetadata({
       title: ogTitle,
       description: ogDescription,
       images: [
-        "https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/Screenshot%202025-02-23%20at%204.31.18%E2%80%AFPM.png",
+        "https://pub-821e7514c97d42cfb1b90453dffd7cf3.r2.dev/Hey%20Ram%20Hey%20Ram.jpg",
       ],
     },
   };
