@@ -105,19 +105,15 @@ ${emojiRose} *Rozana bhakti ka anand lene ke liye, humse judein -* https://wame.
 
 ${emojiFlag} *Hari Om!* ${emojiFlag}`;
 
-          // Log the text for debugging
           console.log(text);
-
-          // Determine if the user is on mobile using the user agent
           const isMobile = /Mobi|Android/i.test(navigator.userAgent);
           const encodedText = encodeURIComponent(text);
 
-          // Use WhatsApp Web for desktop and WhatsApp protocol for mobile
+          // Omit phone parameter so that the user can choose the recipient.
           const whatsappUrl = isMobile
-            ? `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`
-            : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedText}`;
+            ? `whatsapp://send?text=${encodedText}`
+            : `https://web.whatsapp.com/send?text=${encodedText}`;
 
-          // Open the appropriate WhatsApp URL
           window.open(whatsappUrl, "_blank");
         }}
         className="absolute bottom-3 right-3 bg-[#25D366]/90 backdrop-blur-sm text-white p-2.5 rounded-full transition-all duration-300 hover:bg-[#128C7E] hover:scale-110 shadow-lg"
